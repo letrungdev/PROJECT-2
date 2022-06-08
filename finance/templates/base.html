@@ -139,12 +139,12 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="{% static 'img/cat.jpg' %}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">L.T. Trung</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ name }}</span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Lee Thanh Trung</h6>
+              <h6>{{ fullname }}</h6>
               <span></span>
             </li>
             <li>
@@ -182,11 +182,14 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" href="#myModal">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
+<!--                <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#myModal">Sign Out</button></li>-->
               </a>
             </li>
+
+
 
           </ul><!-- End Profile Dropdown Items -->
         </li><!-- End Profile Nav -->
@@ -228,5 +231,21 @@
   <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
 
+  <!-- Logout Modal-->
+  <div class="modal" id="myModal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">Are you sure about that?</div>
+              <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                 <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+              </div>
+          </div>
+      </div>
+  </div>
 </body>
 </html>

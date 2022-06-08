@@ -43,7 +43,108 @@
           <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
           <li class="breadcrumb-item active">Dashboard</li>
         </ol>
-        <button type="button" class="btn btn-primary">Add</button>
+        <a data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </a>
+
+               <!--add transaction-->
+              <div class="modal fade" id="addTransactionModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Add Transaction</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+          <!--Modal body-->
+                    <form method="POST" action="{% url 'add_transaction' %}">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                      <div class="row mb-3">
+                        <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+                        <div class="col-sm-10">
+                          <input type="number" name="amount" class="form-control" id="amount" required>
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label for="tran_time" class="col-sm-2 col-form-label">Transaction Time</label>
+                        <div class="col-sm-10">
+                          <input type="datetime-local" name="tran_time" class="form-control" id="tran_time">
+                      </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Category</label>
+                          <div class="col-sm-10">
+                            <select class="selectpicker" name="category" data-live-search="true" id="example-multiple-optgroups">
+                              <optgroup label="Necessary Expense" class="group-2">
+                                  <option>Food & Drink</option>
+                                  <option>Transportation</option>
+                                  <option>Rentals</option>
+                                  <option>Water & Electricity</option>
+                                  <option>Internet</option>
+                                  <option>Household utensils</option>
+                                  <option>Family care payments</option>
+                              </optgroup>
+
+                              <optgroup label="Self Improvement" class="group-3">
+                                  <option>Education</option>
+                                  <option>Gym & Fitness</option>
+                                  <option>Medical Check-up</option>
+                              </optgroup>
+
+                              <optgroup label="Long-term Saving" class="group-4">
+                                  <option>Saving money</option>
+                              </optgroup>
+
+                              <optgroup label="Investing" class="group-5">
+                                  <option>Investing</option>
+                              </optgroup>
+
+                              <optgroup label="Play & Relax" class="group-6">
+                                  <option>Online </option>
+                                  <option>Gym & Fitness</option>
+                                  <option>Medical Check-up</option>
+                              </optgroup>
+
+                              <optgroup label="Give Away" class="group-7">
+                                  <option>Charity Organization</option>
+                                  <option>Help acquaintance</option>
+                                  <option>Help stranger</option>
+                              </optgroup>
+
+                              <optgroup label="Income" class="group-1">
+                                  <option value="2-1">Salary</option>
+                                  <option value="2-2">Bonus money</option>
+                                  <option value="2-3">Other income</option>
+                              </optgroup>
+                            </select>
+                          </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label for="note" class="col-sm-2 col-form-label">Note</label>
+                        <div class="col-sm-10">
+                          <textarea name="note" class="form-control" style="height: 100px" id="note"></textarea>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                  <label for="tran_image" class="col-sm-2 col-form-label">File Upload</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" name="tran_image" type="file" id="tran_image">
+                  </div>
+                </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-primary" type="submit" >Add Transaction</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
       </nav>
     </div><!-- End Page Title -->
 
@@ -79,7 +180,7 @@
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>145</h6>
+                      <p style="font-weight: bold">542424 {{ currency_unit }}</p>
                       <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -114,7 +215,7 @@
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>$3,264</h6>
+                      <p style="font-weight: bold">56353 {{ currency_unit }}</p>
                       <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -150,7 +251,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>1244</h6>
+                      <p style="font-weight: bold">{{ balance }} {{ currency_unit }}</p>
                       <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
 
                     </div>
@@ -459,6 +560,7 @@
 
       </div>
     </section>
+
 
   </main><!-- End #main -->
 {% endblock %}
