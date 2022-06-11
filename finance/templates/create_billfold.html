@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Create Billfold{% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+ <form method="POST" action="{% url 'create_new_billfold' %}">
+  {% csrf_token %}
+  <div class="row mb-3">
+      <label class="col-sm-2 col-form-label">Currency Unit</label>
+      <select class="form-select" name="currency_unit" data-live-search="true">
+          <option selected>Việt Nam Đồng (VND - ₫)</option>
+          <option>United States Dollar (USD - $)</option>
+          <option>Euro (EUR - €)</option>
+          <option>Pound (GBP - £)</option>
+          <option>Yuan Renminbi (JPY - ¥)</option>
+          <option>Yen (CNY - ¥)</option>
+          <option>Won (KRW - ₩)</option>
+      </select>
+  </div>
+
+  <div class="row mb-3">
+    <label for="billfold_name" class="col-sm-2 col-form-label">Billfold Name</label>
+    <div class="col-sm-10">
+      <input type="text" name="billfold_name" class="form-control" id="billfold_name" required>
+    </div>
+  </div>
+
+
+  <div class="row mb-3">
+    <label for="balance" class="col-sm-2 col-form-label">Balance</label>
+    <div class="col-sm-10">
+      <input type="number" name="balance" class="form-control" id="balance" required>
+    </div>
+
+  </div><button class="btn btn-primary" type="submit" >Create</button>
+
+ </form>
+</main>
+{% endblock %}
