@@ -15,5 +15,4 @@ urlpatterns = [
     path('create_billfold/', views.create_billfold, name='create_billfold'),
     path('create_new_billfold/', views.create_new_billfold, name='create_new_billfold'),
     path('add-transaction/', views.add_transaction, name='add_transaction'),
-
 ]

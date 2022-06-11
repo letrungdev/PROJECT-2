@@ -6,7 +6,8 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
-from .models import Billfold, Transaction, Expenditureplan, Analysis
+from .models import Billfold, Transaction, Expenditureplan, Analysis, Track
+from datetime import datetime
 
 
 def welcome(request):
@@ -60,13 +61,62 @@ def register(request):
 
 
 def dashboard(request):
+    inflow_today = 0
+    outflow_today = 0
+    inflow_month = 0
+    outflow_month = 0
+    inflow_year = 0
+    outflow_year = 0
+    today = ''
     user = request.user
     billfold = Billfold.objects.get(user=user)
-    balance = billfold.balance
+    last_track = Track.objects.filter(user=user).latest('time_track')
+    total = last_track.balance
     currency_unit = billfold.currency_unit[-2]
     fullname = user.first_name + ' ' + user.last_name
     name = user.first_name
-    return render(request, 'dashboard.html', {'fullname': fullname, 'name': name, 'balance': balance, 'currency_unit': currency_unit})
+    tracks = Track.objects.filter(user=user)
+    time_check = datetime.now().strftime("%Y-%m-%d")
+    transactions = Transaction.objects.filter(user=user, tran_time__startswith=time_check)
+    for track in tracks:
+        # Day track
+        today = str(track.time_track).split(' ')[0]
+        month = str(track.time_track).split(' ')[0][0:8]
+        year = str(track.time_track).split(' ')[0][0:5]
+        if today == datetime.now().strftime("%Y-%m-%d"):
+            if track.inflow == '0':
+                outflow_today += int(track.outflow)
+            else:
+                inflow_today += int(track.inflow)
+        # Month track
+        if month == datetime.now().strftime("%Y-%m"):
+            if track.inflow == '0':
+                outflow_month += int(track.outflow)
+            else:
+                inflow_month += int(track.inflow)
+        # Year track
+        if year == datetime.now().strftime("%Y"):
+            if track.inflow == '0':
+                outflow_year += int(track.outflow)
+            else:
+                inflow_year += int(track.inflow)
+
+    return render(request,
+                  'dashboard.html',
+                  {'fullname': fullname,
+                   'name': name,
+                   'today': today,
+                   'total': total,
+                   'currency_unit': currency_unit,
+                   'inflow_today': inflow_today,
+                   'outflow_today': outflow_today,
+                   'inflow_month': inflow_month,
+                   'outflow_month': outflow_month,
+                   'inflow_year': inflow_year,
+                   'outflow_year': outflow_year,
+                   'transactions': transactions,
+                   }
+                  )
 
 
 def statistics(request):
@@ -104,18 +154,42 @@ def create_new_billfold(request):
     balance = request.POST['balance']
     billfold = Billfold(user=user, currency_unit=currency_unit, billfold_name=billfold_name, balance=balance)
     billfold.save()
+    time_track = datetime.now().strftime("%Y-%m-%d %H:%M")
+    track = Track(user=user, billfold=billfold_name, inflow=0, outflow=0, balance=balance, time_track=time_track)
+    track.save()
     return redirect('dashboard')
 
 
 def add_transaction(request):
+    positive_categories = ['Salary', 'Bonus money', 'Other income']
     if request.method == 'POST':
+        inflow = ''
+        outflow = ''
         user = request.user.username
         amount = request.POST['amount']
         category = request.POST['category']
         note = request.POST['note']
-        tran_time = request.POST['tran_time']
+        tran_time = request.POST['tran_time'].replace('T', ' ')
         tran_image = request.POST['tran_image']
-        a = Transaction(user=user, amount=amount, category=category, note=note, tran_time=tran_time, tran_image=tran_image)
+        if category in positive_categories:
+            type = '+'
+        else:
+            type = '-'
+        a = Transaction(user=user, amount=amount, category=category, type=type, note=note, tran_time=tran_time,
+                        tran_image=tran_image)
         a.save()
+        track_before = Track.objects.filter(user=user).latest('time_track')
+        balance = track_before.balance
+        billfold = track_before.billfold
+        if type == '+':
+            inflow = amount
+            outflow = 0
+            balance = str(int(balance) + int(inflow))
+        elif type == '-':
+            inflow = 0
+            outflow = amount
+            balance = str(int(balance) - int(outflow))
+        track = Track(user=user, billfold=billfold, balance=balance, inflow=inflow, outflow=outflow, time_track=tran_time)
+        track.save()
         return redirect('dashboard')
 

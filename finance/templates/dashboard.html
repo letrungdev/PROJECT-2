@@ -70,14 +70,14 @@
                       <div class="row mb-3">
                         <label for="tran_time" class="col-sm-2 col-form-label">Transaction Time</label>
                         <div class="col-sm-10">
-                          <input type="datetime-local" name="tran_time" class="form-control" id="tran_time">
+                          <input type="datetime-local" name="tran_time" class="form-control" id="tran_time" required>
                       </div>
                       </div>
 
                       <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Category</label>
                           <div class="col-sm-10">
-                            <select class="selectpicker" name="category" data-live-search="true" id="example-multiple-optgroups">
+                            <select class="selectpicker" name="category" data-live-search="true" id="example-multiple-optgroups" required>
                               <optgroup label="Necessary Expense" class="group-2">
                                   <option>Food & Drink</option>
                                   <option>Transportation</option>
@@ -114,10 +114,10 @@
                                   <option>Help stranger</option>
                               </optgroup>
 
-                              <optgroup label="Income" class="group-1">
-                                  <option value="2-1">Salary</option>
-                                  <option value="2-2">Bonus money</option>
-                                  <option value="2-3">Other income</option>
+                              <optgroup label="Income" class="group-8">
+                                  <option>Salary</option>
+                                  <option>Bonus money</option>
+                                  <option>Other income</option>
                               </optgroup>
                             </select>
                           </div>
@@ -180,7 +180,7 @@
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <p style="font-weight: bold">542424 {{ currency_unit }}</p>
+                      <p style="font-weight: bold">{{ inflow_today }} {{ currency_unit }}</p>
                       <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -215,7 +215,7 @@
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <p style="font-weight: bold">56353 {{ currency_unit }}</p>
+                      <p style="font-weight: bold">{{ outflow_today }} {{ currency_unit }}</p>
                       <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -251,7 +251,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <p style="font-weight: bold">{{ balance }} {{ currency_unit }}</p>
+                      <p style="font-weight: bold">{{ total }} {{ currency_unit }}</p>
                       <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
 
                     </div>
@@ -424,8 +424,7 @@
 
         <!-- Right side columns -->
         <div class="col-lg-4">
-
-          <!-- Recent Activity -->
+        <!-- Recent Activity -->
           <div class="card">
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -442,61 +441,25 @@
 
             <div class="card-body">
               <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
+              {% if transactions %}
               <div class="activity">
-
+                {% for transaction in transactions %}
                 <div class="activity-item d-flex">
-                  <div class="activite-label">03:07</div>
+                  <div class="activite-label">{{ transaction.tran_time|slice:"11:" }}</div>
                   <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                  <div class="activity-content">
-                    Food and Beverage / <a href="#" class="fw-bold text-dark">KFC</a>
+                  <div class="activity-content text-dark">
+                    <span><span class="fw-bold">{{ transaction.category }}</span>
+                    <span>&nbsp;/&nbsp;{{ transaction.note }}&nbsp;/&nbsp;</span></span>
+                    <p class="text-danger fw-bold" style="margin-bottom:0px">{{ transaction.amount }}&nbsp;{{ currency_unit }}</p>
                   </div>
                 </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">56 min</div>
-                  <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                  <div class="activity-content">
-                    Food and Beverage / <a href="#" class="fw-bold text-dark">Breakfast with bread and milk</a>
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 hrs</div>
-                  <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-                  <div class="activity-content">
-                    Transport / <a href="#" class="fw-bold text-dark">Buy Gas</a>
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">1 day</div>
-                  <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                  <div class="activity-content">
-                    Shopping <a href="#" class="fw-bold text-dark">Buy Clothes</a>
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 days</div>
-                  <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                  <div class="activity-content">
-                    Food and Beverage / <a href="#" class="fw-bold text-dark">Luch</a>
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">4 weeks</div>
-                  <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                  <div class="activity-content">
-                    Food and Beverage / <a href="#" class="fw-bold text-dark">Dinner</a>
-                  </div>
-                </div><!-- End activity item-->
-
+                {% endfor %}
               </div>
-
+              {% endif %}
             </div>
           </div><!-- End Recent Activity -->
+
+
 
           <!-- Money-saving tips -->
           <div class="card">
