@@ -11,7 +11,7 @@ from datetime import datetime
 
 
 def welcome(request):
-    return render(request, 'welcome.html')
+    return render(request, 'index.html')
 
 
 def loginView(request):
@@ -68,6 +68,12 @@ def dashboard(request):
     inflow_year = 0
     outflow_year = 0
     today = ''
+
+    data_income = []
+    data_outcome = []
+    data_total = []
+    categories = []
+
     user = request.user
     billfold = Billfold.objects.get(user=user)
     last_track = Track.objects.filter(user=user).latest('time_track')
@@ -86,8 +92,13 @@ def dashboard(request):
         if today == datetime.now().strftime("%Y-%m-%d"):
             if track.inflow == '0':
                 outflow_today += int(track.outflow)
+                data_outcome.append(track.outflow)
             else:
                 inflow_today += int(track.inflow)
+                data_income.append(track.inflow)
+            data_total.append(track.balance)
+            categories.append("\"" + track.time_track + "Z\"")
+
         # Month track
         if month == datetime.now().strftime("%Y-%m"):
             if track.inflow == '0':
@@ -107,6 +118,10 @@ def dashboard(request):
                    'name': name,
                    'today': today,
                    'total': total,
+                   'data_income': data_income,
+                   'data_outcome': data_outcome,
+                   'data_total': data_total,
+                   'categories': categories,
                    'currency_unit': currency_unit,
                    'inflow_today': inflow_today,
                    'outflow_today': outflow_today,
@@ -123,6 +138,7 @@ def statistics(request):
     user = request.user
     fullname = user.first_name + ' ' + user.last_name
     name = user.first_name
+
     return render(request, 'statistics.html', {'fullname': fullname, 'name': name})
 
 
