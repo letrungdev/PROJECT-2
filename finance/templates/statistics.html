@@ -54,7 +54,7 @@
         <div class="col-lg-6">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Pie Chart</h5>
+              <h5 class="card-title">Expense Types Chart</h5>
 
               <!-- Pie Chart -->
               <div id="pieChart" style="min-height: 370px;" class="echart"></div>
@@ -63,8 +63,8 @@
                 document.addEventListener("DOMContentLoaded", () => {
                   echarts.init(document.querySelector("#pieChart")).setOption({
                     title: {
-                      text: 'Referer of a Website',
-                      subtext: 'Fake Data',
+                      text: 'Expense Track',
+                      subtext: 'Today',
                       left: 'center'
                     },
                     tooltip: {
@@ -72,33 +72,13 @@
                     },
                     legend: {
                       orient: 'vertical',
-                      left: 'left'
+                      right: 'right'
                     },
                     series: [{
                       name: 'Access From',
                       type: 'pie',
                       radius: '60%',
-                      data: [{
-                          value: 1048,
-                          name: 'Food'
-                        },
-                        {
-                          value: 735,
-                          name: 'Electric'
-                        },
-                        {
-                          value: 580,
-                          name: 'Shopping'
-                        },
-                        {
-                          value: 484,
-                          name: 'Transportation'
-                        },
-                        {
-                          value: 300,
-                          name: 'Game'
-                        }
-                      ],
+                      data: {{ data|safe }},
                       emphasis: {
                         itemStyle: {
                           shadowBlur: 10,

@@ -135,11 +135,72 @@ def dashboard(request):
 
 
 def statistics(request):
+    necessary = ["Food & Drink", "Transportation", "Rentals", "Water & Electricity",
+                 "Internet", "Household Utensils", "Family Payments"]
+    self_improvement = ["Education", "Gym & Fitness", "Medical Check-up"]
+    long_term = ["Saving Money"]
+    investing = ["Investing"]
+    play = ["Online Services", "Relax Services"]
+    give = ["Charity Organization", "Help Acquaintance", "Help Stranger"]
+
+    nec_value = 0
+    sel_value = 0
+    lon_value = 0
+    inv_value = 0
+    pla_value = 0
+    giv_value = 0
+
+    user = request.user
+    time_check = datetime.now().strftime("%Y-%m-%d")
+    transactions = Transaction.objects.filter(user=user, tran_time__startswith=time_check)
+    for transaction in transactions:
+        if transaction.category in necessary:
+            nec_value += int(transaction.amount)
+        elif transaction.category in self_improvement:
+            sel_value += int(transaction.amount)
+        elif transaction.category in long_term:
+            lon_value += int(transaction.amount)
+        elif transaction.category in investing:
+            inv_value += int(transaction.amount)
+        elif transaction.category in play:
+            pla_value += int(transaction.amount)
+        elif transaction.category in give:
+            giv_value += int(transaction.amount)
+
+    nec_expense = {
+        'value': nec_value,
+        'name': 'Necessary'
+    }
+    sel_expense = {
+        'value': sel_value,
+        'name': 'Self Improvement'
+    }
+    lon_expense = {
+        'value': lon_value,
+        'name': 'Long-term Saving'
+    }
+    inv_expense = {
+        'value': inv_value,
+        'name': 'Investing'
+    }
+    pla_expense = {
+        'value': pla_value,
+        'name': 'Play & Relax'
+    }
+    giv_expense = {
+        'value': giv_value,
+        'name': 'Give Away'
+    }
+    data = [nec_expense, sel_expense, lon_expense, inv_expense, pla_expense, giv_expense]
     user = request.user
     fullname = user.first_name + ' ' + user.last_name
     name = user.first_name
-
-    return render(request, 'statistics.html', {'fullname': fullname, 'name': name})
+    return render(request, 'statistics.html',
+                  {'fullname': fullname,
+                   'name': name,
+                   'data': data,
+                   }
+                  )
 
 
 def contact(request):
@@ -177,7 +238,7 @@ def create_new_billfold(request):
 
 
 def add_transaction(request):
-    positive_categories = ['Salary', 'Bonus money', 'Other income']
+    positive_categories = ['Salary', 'Bonus', 'Other Income']
     if request.method == 'POST':
         inflow = ''
         outflow = ''
