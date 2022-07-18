@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Expenditures Statistics</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item">Statistics</li>
+          <li class="breadcrumb-item active">Today</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Category Expenses</h5>
+              <!-- Pie Chart -->
+              <div id="pieChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#pieChart"), {
+                    series: {{ data_day|safe }},
+                    chart: {
+                      height: 350,
+                      type: 'pie',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }}
+                  }).render();
+                });
+              </script>
+              <!-- End Pie Chart -->
+
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Detail</h5>
+
+              {% if income_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Income</h6>
+                {% for transaction in income_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if necessary_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Necessary Expense</h6>
+                {% for transaction in necessary_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if self_improvement_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Self Improvement</h6>
+                {% for transaction in self_improvement_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if long_term_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Long-term Savings</h6>
+                {% for transaction in long_term_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if investing_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Investing</h6>
+                {% for transaction in investing_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if play_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Play & Relax</h6>
+                {% for transaction in play_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+              {% if give_trans %}
+              <div class="activity">
+                <h6 class="fw-bold">Give Away</h6>
+                {% for transaction in give_trans %}
+                <div class="activity-item d-flex" style="margin-left:30px">
+                  <div><i class="bi bi-play-fill text-success"></i>{{ transaction.tran_time|slice:"11:" }}:&nbsp;<span class="text-danger fw-bold">{{ transaction.amount }}&nbsp;{{ currency_unit }}</span></div>
+                  <div class="activity-content text-dark">/<span class="fw-bold"> {{ transaction.category }}</span> /&nbsp;{{ transaction.note |slice:10}}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+              </div>
+              <br>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

@@ -61,6 +61,11 @@
                   <form method="POST" action="{% url 'register' %}" class="row g-3 needs-validation" novalidate>
                     {% csrf_token %}
                     <div class="col-12">
+                      {% if messages %}
+                      {% for message in messages %}
+                      <p class="text-danger">{{ message }}!</p>
+                      {% endfor %}
+                      {% endif %}
                       <label for="firstname" class="form-label">First Name</label>
                       <input type="text" name="firstname" class="form-control" id="firstname" required>
                       <div class="invalid-feedback">Please, enter your first name!</div>
@@ -88,6 +93,12 @@
                       <label for="password" class="form-label">Password</label>
                       <input type="password" name="password" class="form-control" id="password" required>
                       <div class="invalid-feedback">Please enter your password!</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="password" class="form-label">Confirm Password</label>
+                      <input type="password" name="repassword" class="form-control" id="repassword" required>
+                      <div class="invalid-feedback">Please enter confirm password!</div>
                     </div>
 
                     <div class="col-12">

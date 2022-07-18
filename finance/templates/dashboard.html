@@ -3,36 +3,6 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboard' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'statistics' %}">
-          <i class="bi bi-bar-chart"></i>
-          <span>Statistics</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'contact' %}">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-    </ul>
-
-  </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
@@ -154,7 +124,7 @@
         <div class="col-lg-8">
           <div class="row">
 
-            <!-- Sales Card -->
+            <!-- Inflow Card -->
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card sales-card">
 
@@ -164,32 +134,37 @@
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
+                      <select id="dropdown_inflow">
+                      <option class="dropdown-item" value="empty" disabled selected> please select </option>
+                      <option class="dropdown-item" value="0">Today</option>
+                      <option class="dropdown-item" value="1">This month</option>
+                      <option class="dropdown-item" value="2">This year</option>
+                    </select>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Income <span>| Today</span></h5>
+                  <h5 class="card-title">Income <span id="inflow_name">| Today</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-cart"></i>
+                      <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <p style="font-weight: bold">{{ inflow_today }} {{ currency_unit }}</p>
-
-
+                      <p style="font-weight: bold"><span id="inflow_amount">{{ inflow_today }}</span><span> {{ currency_unit }}</span></p>
                     </div>
                   </div>
                 </div>
 
               </div>
-            </div><!-- End Sales Card -->
+            </div><!-- End Inflow Card -->
 
-            <!-- Revenue Card -->
+  <script type="text/javascript">
+
+</script>
+
+             <!-- Outflow Card -->
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
 
@@ -199,55 +174,101 @@
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
+                      <select id="dropdown_outflow">
+                      <option class="dropdown-item" value="empty" disabled selected> please select </option>
+                      <option class="dropdown-item" value="0">Today</option>
+                      <option class="dropdown-item" value="1">This month</option>
+                      <option class="dropdown-item" value="2">This year</option>
+                    </select>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Outcome <span>| Today</span></h5>
+                  <h5 class="card-title">Outcome <span id="outflow_name">| Today</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
+                      <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <p style="font-weight: bold">{{ outflow_today }} {{ currency_unit }}</p>
-
-
+                      <p style="font-weight: bold"><span id="outflow_amount">{{ outflow_today }}</span><span> {{ currency_unit }}</span></p>
                     </div>
                   </div>
                 </div>
 
               </div>
-            </div><!-- End Revenue Card -->
+            </div><!-- End Inflow Card -->
 
-            <!-- Customers Card -->
+  <script type="text/javascript">
+  window.onload = function() {
+  let
+    Outflow_name = document.getElementById("outflow_name"),
+    Outflow_amount = document.getElementById("outflow_amount"),
+    mySelect_out = document.getElementById("dropdown_outflow")
+  ;
+
+  mySelect_out.onchange = function(){
+
+    switch (mySelect_out.value)  {
+      case '0':
+        Outflow_name.textContent = "| Today";
+        Outflow_amount.textContent = {{ outflow_today }};
+      break;
+      case '1':
+        Outflow_name.textContent = "| Month";
+        Outflow_amount.textContent = {{ outflow_month }};
+      break;
+      case '2':
+        Outflow_name.textContent = "| Year"
+        Outflow_amount.textContent = {{ outflow_year }};
+      break;
+
+    }
+  }
+
+    let
+    Inflow_name = document.getElementById("inflow_name"),
+    Inflow_amount = document.getElementById("inflow_amount"),
+    mySelect_in = document.getElementById("dropdown_inflow")
+  ;
+
+
+  mySelect_in.onchange = function(){
+
+    switch (mySelect_in.value)  {
+      case '0':
+        Inflow_name.textContent = "| Today";
+        Inflow_amount.textContent = {{ inflow_today }};
+      break;
+      case '1':
+        Inflow_name.textContent = "| Month";
+        Inflow_amount.textContent = {{ inflow_month }};
+      break;
+      case '2':
+        Inflow_name.textContent = "| Year"
+        Inflow_amount.textContent = {{ inflow_year }};
+      break;
+
+    }
+  }
+
+
+}
+
+
+</script>
+
+
+            <!-- Total Card -->
             <div class="col-xxl-4 col-xl-12">
-
               <div class="card info-card customers-card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
                 <div class="card-body">
-                  <h5 class="card-title">Balance <span>| Today</span></h5>
+                  <h5 class="card-title">Balance</h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
+                      <i class="bi bi-award-fill"></i>
                     </div>
                     <div class="ps-3">
                       <p style="font-weight: bold">{{ total }} {{ currency_unit }}</p>
@@ -258,156 +279,101 @@
                 </div>
               </div>
 
-            </div><!-- End Customers Card -->
+            </div><!-- End Total Card -->
 
-            <!-- Reports -->
+            <!-- Day Track -->
             <div class="col-12">
-              <div class="card">
+            <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Day Track</h5>
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+              <!-- Line Chart -->
+              <div id="dayChart"></div>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#dayChart"), {
+                    series: [{
+                      name: "Balance",
+                      data: {{ data_total_day|safe }}
+                    }],
+                    chart: {
+                      height: 350,
+                      type: 'area',
+                      zoom: {
+                        enabled: false
+                      }
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      curve: 'straight'
+                    },
+                    grid: {
+                      row: {
+                        colors: ['#f3f3f3', 'transparent'],
+                        opacity: 0.5
+                      },
+                    },
+                    xaxis: {
+                      categories: {{ categories_day|safe }},
+                    }
+                  }).render();
+                });
+              </script>
+              <!-- End Line Chart -->
 
-                <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
+            </div>
+          </div>
+            </div><!-- End Month Track -->
 
-                  <!-- Line Chart -->
-                  <div id="reportsChart"></div>
-                  <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Total',
-                          data: {{ data_total|safe }}
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.5,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 3
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: {{ categories|safe }}
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
-                  <!-- End Line Chart -->
-
-                </div>
-
-              </div>
-            </div><!-- End Reports -->
-
-            <!-- Recent Sales -->
+            <!-- Month Track -->
             <div class="col-12">
-              <div class="card recent-sales overflow-auto">
+            <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Month Track</h5>
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+              <!-- Line Chart -->
+              <div id="monthChart"></div>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#monthChart"), {
+                    series: [{
+                      name: "Balance",
+                      data: {{ data_total_month|safe }}
+                    }],
+                    chart: {
+                      height: 350,
+                      type: 'area',
+                      zoom: {
+                        enabled: false
+                      }
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      curve: 'straight'
+                    },
+                    grid: {
+                      row: {
+                        colors: ['#f3f3f3', 'transparent'],
+                        opacity: 0.5
+                      },
+                    },
+                    xaxis: {
+                      categories: {{ categories_month|safe }},
+                    }
+                  }).render();
+                });
+              </script>
+              <!-- End Line Chart -->
 
-                <div class="card-body">
-                  <h5 class="card-title">Analyse <span>| Today</span></h5>
-                  <h6>Your expenditure is quite reasonable today</h6>
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Sensible</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-danger">unreasonable</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Sensible</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">unreasonable</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Sensible</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Recent Sales -->
+            </div>
+          </div>
+            </div><!-- End Month Track -->
 
 
           </div>
@@ -420,7 +386,7 @@
 
 
             <div class="card-body">
-              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+              <h5 class="card-title">Recent Transactions <span>| Today</span></h5>
               {% if transactions %}
               <div class="activity">
                 {% for transaction in transactions %}
@@ -436,7 +402,7 @@
                 {% endfor %}
               </div>
               {% endif %}
-              <a href="" style="margin-top: 25px; font-size:15px"><u>See All</u></a>
+              <a href="{% url 'user_transaction' %}" style="margin-top: 25px; font-size:15px"><u>See All</u></a>
             </div>
           </div><!-- End Recent Activity -->
 

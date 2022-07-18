@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Expenditures Statistics</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item">Statistics</li>
+          <li class="breadcrumb-item active">Year</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Income / Outcome Months</h5>
+
+              <!-- Column Chart -->
+              <div id="columnChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#columnChart"), {
+                    series: [{
+                      name: 'Income',
+                      data: {{ inflow_months|safe }}
+                    },
+                    {
+                      name: 'Outcome',
+                      data: {{ outflow_months|safe }}
+                    }],
+                    chart: {
+                      type: 'bar',
+                      height: 340
+                    },
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                      },
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      show: true,
+                      width: 2,
+                      colors: ['transparent']
+                    },
+                    xaxis: {
+                      categories: {{ months|safe }},
+                    },
+                    yaxis: {
+                      title: {
+                        text: 'VND'
+                      }
+                    },
+                    fill: {
+                      opacity: 1
+                    },
+                    tooltip: {
+                      y: {
+                        formatter: function(val) {
+                          return val + " VND"
+                        }
+                      }
+                    }
+                  }).render();
+                });
+              </script>
+              <!-- End Column Chart -->
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Spent Amount Bar <span style="font-size:12px">(by category amount)</span></h5>
+
+              <!-- Column Chart -->
+              <div id="testChart"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#testChart"), {
+          series: [{
+          name: 'Necessary',
+          data: {{ necessary_months|safe }}
+        }, {
+          name: 'Self Improvement',
+          data: {{ self_improvement_months|safe }}
+        }, {
+          name: 'Long-term Savings',
+          data: {{ long_term_months|safe }}
+        }, {
+          name: 'Investing',
+          data: {{ investing_months|safe }}
+        }, {
+          name: 'Play & Relax',
+          data: {{ play_months|safe }}
+        }, {
+          name: 'Give Away',
+          data: {{ give_months|safe }}
+        }],
+          chart: {
+          type: 'bar',
+          height: 600,
+          stacked: true,
+          toolbar: {
+            show: true
+          },
+          zoom: {
+            enabled: true
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 10
+          },
+        },
+        xaxis: {
+          categories: {{ months|safe }},
+        },
+        legend: {
+          position: 'right',
+          offsetY: 40
+        },
+        fill: {
+          opacity: 1
+        }
+        }).render();
+                });
+              </script>
+              <!-- End Column Chart -->
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Category Expenses</h5>
+              <h6>This year</h6>
+              <!-- Pie Chart -->
+              <div id="pieChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#pieChart"), {
+                    series: {{ data_year|safe }},
+                    chart: {
+                      height: 350,
+                      type: 'pie',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }}
+                  }).render();
+                });
+              </script>
+              <!-- End Pie Chart -->
+
+            </div>
+          </div>
+
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Top Income Transactions</h5>
+              {% if top_incomes %}
+              <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Note</th>
+                    <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for transaction in top_incomes %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.note }}</td>
+                    <td>{{ transaction.tran_time }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Top Spent Transactions</h5>
+              {% if top_outcomes %}
+              <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Note</th>
+                    <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for transaction in top_outcomes %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.note }}</td>
+                    <td>{{ transaction.tran_time }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Compare</h5>
+              <!-- Pie Chart -->
+              <div id="lastChart"><span class="fw-bold">Last Year</span></div>
+              {% if data_last_year is not None %}
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#lastChart"), {
+                    series: {{ data_last_year|safe }},
+                    chart: {
+                      height: 250,
+                      type: 'pie',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }}
+                  }).render();
+                });
+              </script>
+              {% else %}
+              <p>(No data)</p>
+              {% endif %}
+
+              <div id="avgChart"><span class="fw-bold">Previous Years Average</span></div>
+              {% if data_year_avg is not None %}
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#avgChart"), {
+                    series: {{ data_year_avg|safe }},
+                    chart: {
+                      height: 250,
+                      type: 'pie',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }}
+                  }).render();
+                });
+              </script>
+              {% else %}
+              <p>(No data)</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

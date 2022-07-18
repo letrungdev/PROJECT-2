@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Transaction{% endblock %}
+
+{% block content %}
+<!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'user_transaction' %}">
+          <i class="bi bi-grid"></i>
+          <span>Transaction</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'statistics' %}">
+          <i class="bi bi-bar-chart"></i>
+          <span>Statistics</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'contact' %}">
+          <i class="bi bi-envelope"></i>
+          <span>Feedback</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Edit Transaction</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Transaction</li>
+          <li class="breadcrumb-item active">Edit Transaction</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+
+        <div class="col-lg-10">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Edit Form</h5>
+
+              <form action="{% url 'update_transaction' transaction.pk %}" method="POST">
+                  {% csrf_token %}
+                    <div class="modal-body">
+                      <div class="row mb-3">
+                        <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+                        <div class="col-sm-10">
+                          <input type="number" name="amount" class="form-control" id="amount" value="{{ transaction.amount }}" required>
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label for="tran_time" class="col-sm-2 col-form-label">Transaction Time</label>
+                        <div class="col-sm-10">
+                          <input name="tran_time" class="form-control" id="tran_time" value="{{ transaction.tran_time }}" required>
+                      </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Category</label>
+                          <div class="col-sm-10">
+                            <select class="selectpicker" name="category" data-live-search="true" id="example-multiple-optgroups" required>
+                              <optgroup label="Necessary Expense" class="group-2">
+                                  {% if transaction.category == "Food & Drink" %}
+                                  <option selected>Food & Drink</option>
+                                  {% else %}
+                                  <option>Food & Drink</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Transportation" %}
+                                  <option selected>Transportation</option>
+                                  {% else %}
+                                  <option>Transportation</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Rentals" %}
+                                  <option selected>Rentals</option>
+                                  {% else %}
+                                  <option>Rentals</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Internet" %}
+                                  <option selected>Internet</option>
+                                  {% else %}
+                                  <option>Internet</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Household Utensils" %}
+                                  <option selected>Household Utensils</option>
+                                  {% else %}
+                                  <option>Household Utensils</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Family Payments" %}
+                                  <option selected>Family Payments</option>
+                                  {% else %}
+                                  <option>Family Payments</option>
+                                  {% endif %}
+                              </optgroup>
+
+                              <optgroup label="Self Improvement" class="group-3">
+                                  {% if transaction.category == "Education" %}
+                                  <option selected>Education</option>
+                                  {% else %}
+                                  <option>Education</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Gym & Fitness" %}
+                                  <option selected>Gym & Fitness</option>
+                                  {% else %}
+                                  <option>Gym & Fitness</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Medical Check-up" %}
+                                  <option selected>Medical Check-up</option>
+                                  {% else %}
+                                  <option>Medical Check-up</option>
+                                  {% endif %}
+
+                              </optgroup>
+
+                              <optgroup label="Long-term Saving" class="group-4">
+                                  {% if transaction.category == "Saving Money" %}
+                                  <option selected>Saving Money</option>
+                                  {% else %}
+                                  <option>Saving Money</option>
+                                  {% endif %}
+                              </optgroup>
+
+                              <optgroup label="Investing" class="group-5">
+                                  {% if transaction.category == "Investing" %}
+                                  <option selected >Investing</option>
+                                  {% else %}
+                                  <option>Investing</option>
+                                  {% endif %}
+                              </optgroup>
+
+                              <optgroup label="Play & Relax" class="group-6">
+                                  {% if transaction.category == "Online Services" %}
+                                  <option selected>Online Services</option>
+                                  {% else %}
+                                  <option>Online Services</option>
+                                  {% endif %}
+                                  {% if transaction.category == "Relax Services" %}
+                                  <option selected>Relax Services</option>
+                                  {% else %}
+                                  <option>Relax Services</option>
+                                  {% endif %}
+                              </optgroup>
+
+                              <optgroup label="Give Away" class="group-7">
+                                  {% if transaction.category == "Charity Organization" %}
+                                  <option selected>Charity Organization</option>
+                                  {% else %}
+                                  <option>Charity Organization</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Help Acquaintance" %}
+                                  <option selected>Help Acquaintance</option>
+                                  {% else %}
+                                  <option>Help Acquaintance</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Help Stranger" %}
+                                  <option selected>Help Stranger</option>
+                                  {% else %}
+                                  <option>Help Stranger</option>
+                                  {% endif %}
+
+                              </optgroup>
+
+                              <optgroup label="Income" class="group-8">
+                                  {% if transaction.category == "Salary" %}
+                                  <option selected>Salary</option>
+                                  {% else %}
+                                  <option>Salary</option>
+                                  {% endif %}
+                                  {% if transaction.category == "Bonus" %}
+                                  <option selected>Bonus</option>
+                                  {% else %}
+                                  <option>Bonus</option>
+                                  {% endif %}
+
+                                  {% if transaction.category == "Other Income" %}
+                                  <option selected>Other Income</option>
+                                  {% else %}
+                                  <option>Other Income</option>
+                                  {% endif %}
+
+                              </optgroup>
+                            </select>
+                          </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <label for="note" class="col-sm-2 col-form-label">Note</label>
+                        <div class="col-sm-10">
+                          <textarea name="note" class="form-control" style="height: 100px" id="note">{{ transaction.note }}</textarea>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                  <label for="tran_image" class="col-sm-2 col-form-label">File Upload</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" name="tran_image" type="file" id="tran_image" value="{{ transaction.tran_image }}">
+                  </div>
+                </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-primary" type="submit" >Submit</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+
+            </div>
+          </div>
+
+        </div>
+
+
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Analyse{% endblock %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Analyse Expenditure</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Analyse</li>
+
+        </ol>
+        <h1> {{ ratio }}</h1>
+        <a data-bs-toggle="modal" data-bs-target="#changeRatio">
+          <button type="submit" class="btn btn-primary">Change ratio suitable for you</button>
+        </a>
+
+        <div class="modal fade" id="changeRatio">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Change Ratio</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+          <!--Modal body-->
+                    <form method="POST" action="{% url 'add_ratio' %}">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                      <div class="row mb-3" style="padding-bottom:30px">
+                        <div class="col-sm-2">Interval</div>
+                        <div class="col-sm-4">
+                        <input type="radio" id="1month" name="interval" value="1">
+                        <label for="1month">1 month</label><br>
+                        <input type="radio" id="2month" name="interval" value="2">
+                        <label for="2month">2 months</label><br>
+                        <input type="radio" id="3month" name="interval" value="3">
+                        <label for="3month">3 months</label>
+                        </div>
+                        <div class="col-sm-1"> OR </div>
+                        <div class="col-sm-5">
+                          <div class="row">
+                            <div class="col-sm-4"><label for="start">Start</label></div>
+                            <div class="col-sm-8"><input type="date" id="start" name="start" style="width:120px"></div>
+                          </div>
+
+                          <div class="row" style="margin-top:30px">
+                            <div class="col-sm-4"><label for="end">End</label></div>
+                            <div class="col-sm-8"><input type="date" id="end" name="end" style="width:120px"></div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <p>Ratio</p>
+                        <div class="col-md-4">
+                          Necessary
+                          <input type="text" class="form-control" name="necessary" value="0.55" required>
+                        </div>
+
+                        <div class="col-md-4">
+                          Self Improvement
+                          <input type="text" class="form-control" name="self_improvement" value="0.1" required>
+                        </div>
+
+                         <div class="col-md-4">
+                          Long-term Savings
+                          <input type="text" class="form-control" name="long_term" value="0.1" required>
+                        </div>
+
+                        <div class="col-md-4" style="margin-top:15px">
+                          Investing
+                          <input type="text" class="form-control" name="investing" value="0.1" required>
+                        </div>
+
+                        <div class="col-md-4" style="margin-top:15px">
+                          Play & Relax
+                          <input type="text" class="form-control" name="play" value="0.1" required>
+                        </div>
+
+                        <div class="col-md-4" style="margin-top:15px">
+                          Give Away
+                          <input type="text" class="form-control" name="give" value="0.05" required>
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-primary" type="submit" >Submit</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+
+
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <p style="padding-top:25px">
+              <span class="fw-bold">Interval:</span>
+              {% if '-' in interval %}
+                From {{ start }} to {{ end }}
+              {% else %}
+                {{ interval }} ({{ month }} {{ last_month }} {{ last_2_month }})
+              {% endif %}
+
+              <span class="fw-bold" style="margin-left:100px">Ratio</span>
+              <span>: {{ percent }}</span>
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Spent & Ideal Amount</h5>
+
+              <!-- Column Chart -->
+              <div id="columnChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#columnChart"), {
+                    series: [{
+                      name: 'Ideal',
+                      data: {{ ideal|safe }}
+                    },
+                    {
+                      name: 'Spent',
+                      data: {{ expense|safe }}
+                    }],
+                    chart: {
+                      type: 'bar',
+                      height: 370
+                    },
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                      },
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      show: true,
+                      width: 2,
+                      colors: ['transparent']
+                    },
+                    xaxis: {
+                      categories: {{ money_name|safe }},
+                    },
+                    yaxis: {
+                      title: {
+                        text: 'VND'
+                      }
+                    },
+                    fill: {
+                      opacity: 1
+                    },
+                    tooltip: {
+                      y: {
+                        formatter: function(val) {
+                          return val + " VND"
+                        }
+                      }
+                    }
+                  }).render();
+                });
+              </script>
+              <!-- End Column Chart -->
+
+            </div>
+          </div>
+        </div>
+
+      <div class="col-lg-6" style="font-size:17px">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Check Table</h5>
+              <!-- Active Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Percent</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Spent</th>
+                    <th scope="col">Rest</th>
+                  </tr>
+                </thead>
+                <tbody style="font-size:16px">
+                  <tr>
+                    <th scope="row">Necessary</th>
+                    <td>{{ percent.0 }}</td>
+                    <td>{{ nec_ideal }}</td>
+                    <td>{{ nec_money }}</td>
+                    <td>{{ nec_rest }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Self-Improvement</th>
+                    <td>{{ percent.1 }}</td>
+                    <td>{{ sel_ideal }}</td>
+                    <td>{{ sel_money }}</td>
+                    <td>{{ sel_rest }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Long-term Savings</th>
+                    <td>{{ percent.2 }}</td>
+                    <td>{{ lon_ideal }}</td>
+                    <td>{{ lon_money }}</td>
+                    <td>{{ lon_rest }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Investing</th>
+                    <td>{{ percent.3 }}</td>
+                    <td>{{ inv_ideal }}</td>
+                    <td>{{ inv_money }}</td>
+                    <td>{{ inv_rest }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Play & Relax</th>
+                    <td>{{ percent.4 }}</td>
+                    <td>{{ pla_ideal }}</td>
+                    <td>{{ pla_money }}</td>
+                    <td>{{ pla_rest }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Give Away</th>
+                    <td>{{ percent.5 }}</td>
+                    <td>{{ giv_ideal }}</td>
+                    <td>{{ giv_money }}</td>
+                    <td>{{ giv_rest }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="fw-bold" style="font-size:15px;float:right">Currency Unit: {{ currency }}</p>
+              <br><br><br>
+            </div>
+          </div>
+        </div>
+
+      <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Ideal Ratio</h5>
+
+              <!-- Donut Chart -->
+              <div id="idealChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#idealChart"), {
+                    series: {{ percent|safe }},
+                    chart: {
+                      height: 350,
+                      type: 'donut',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }},
+                  }).render();
+                });
+              </script>
+              <!-- End Donut Chart -->
+
+            </div>
+          </div>
+        </div>
+
+      <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Current Ratio</h5>
+
+              <!-- Donut Chart -->
+              <div id="currentChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#currentChart"), {
+                    series: {{ spent|safe }},
+                    chart: {
+                      height: 350,
+                      type: 'donut',
+                      toolbar: {
+                        show: true
+                      }
+                    },
+                    labels: {{ labels1|safe }},
+                  }).render();
+                });
+              </script>
+              <!-- End Donut Chart -->
+
+            </div>
+          </div>
+        </div>
+    </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

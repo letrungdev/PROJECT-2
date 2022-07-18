@@ -9,15 +9,11 @@ class Billfold(models.Model):
     balance = models.IntegerField(null=True)
 
 
-class Expenditureplan(models.Model):
-    category = models.CharField(max_length=40, null=True)
-    amount = models.CharField(max_length=40, null=True)
-
-
 class Transaction(models.Model):
     user = models.CharField(max_length=30, null=True)
-    amount = models.CharField(max_length=40, null=True)
+    amount = models.IntegerField(null=True)
     category = models.CharField(max_length=40, null=True)
+    kind = models.CharField(max_length=40, null=True)
     type = models.CharField(max_length=40, null=True)
     note = models.CharField(max_length=60, null=True)
     tran_time = models.CharField(max_length=30, null=True)
@@ -34,8 +30,9 @@ class Track(models.Model):
 
 
 class Analysis(models.Model):
-    content = models.CharField(max_length=100, null=True)
-    type = models.CharField(max_length=30, null=True)
+    user = models.CharField(max_length=30, null=True)
+    interval = models.CharField(max_length=30, null=True)
+    ratio = models.CharField(max_length=100, null=True)
 
 
 

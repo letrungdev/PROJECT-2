@@ -3,46 +3,15 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
- <!-- ======= Sidebar ======= -->
-   <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'dashboard' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'statistics' %}">
-          <i class="bi bi-bar-chart"></i>
-          <span>Statistics</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'contact' %}">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-    </ul>
-
-  </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Contact</h1>
+      <h1>Feedback</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Pages</li>
-          <li class="breadcrumb-item active">Contact</li>
+          <li class="breadcrumb-item active">Feedback</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -54,11 +23,21 @@
         <div class="col-xl-6">
 
           <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <p class="fw-bold" style="margin-top:20px">Hi, {{ user.get_full_name }}!</p>
+                   Thank you so much for using my website!
+                  We would be very grateful if you share your experience with us.
+                </div>
+              </div>
+
+            </div>
             <div class="col-lg-6">
               <div class="info-box card">
                 <i class="bi bi-geo-alt"></i>
                 <h3>Address</h3>
-                <p>Hai Ba Trung<br>Ha Noi, Viet Nam</p>
+                <p>Ha Noi, Viet Nam</p>
               </div>
             </div>
             <div class="col-lg-6">
@@ -78,8 +57,8 @@
             <div class="col-lg-6">
               <div class="info-box card">
                 <i class="bi bi-clock"></i>
-                <h3>Open Hours</h3>
-                <p>Monday - Friday<br>12:00AM - 12:00PM</p>
+                <h3>Open Days</h3>
+                <p>Monday - Friday</p>
               </div>
             </div>
           </div>

@@ -61,6 +61,11 @@
                   <form method="POST" action="{% url 'login' %}" class="row g-3 needs-validation" novalidate>
                     {% csrf_token %}
                     <div class="col-12">
+                      {% if messages %}
+                      {% for message in messages %}
+                      <p class="text-danger">{{ message }}!</p>
+                      {% endfor %}
+                      {% endif %}
                       <label for="username" class="form-label">Username</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
